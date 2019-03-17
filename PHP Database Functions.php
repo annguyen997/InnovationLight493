@@ -85,7 +85,7 @@ function getLastPasswordResetDate($empid){
 }
 
 /* Check if the password is about to expire 
-- Should do this for all employees to save computational resources of calling each function? 
+- Should do this for all employees to save computational resources of calling each function? Current configurations opens connection each time, which may be unnecessarily redundant. 
 */
 function passwordExpire($empid){
     $databaseDate = getLastPasswordResetDate($empid); 
