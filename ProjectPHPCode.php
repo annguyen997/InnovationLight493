@@ -31,6 +31,8 @@ function createSQLConnection(){
 }
 
 //90 DAY NOTIFICATION
+//WE MAY NEED TO ADD A TOKEN THAT WOULD ALLOW USER TO UPDATE INFORMATION IF NECESSARY.
+//THIS IS SEPARATE FROM THE PASSWORD-RESET EMAILS/TEXT, WHICH IS MANDATORY.
 function sendSMS90day($dbh){
     $phone = array();
     foreach($dbh->query('SELECT phone FROM empinfo') as $row) {
@@ -42,6 +44,7 @@ function sendSMS90day($dbh){
     foreach($phone as $splitme) {
       $s = $splitme;
       $m = "|";
+      //What is this $1 and $2?!?!?! 
       $split = preg_replace('/(.{'.ceil(strlen($s)/2).'})(.*)/', "$1$m$2", $s);
       $length = (strlen($split)/2);
       $store = mb_strimwidth($split, 0, $length);
@@ -52,8 +55,9 @@ function sendSMS90day($dbh){
    foreach($userPhone as $phoneNumber) {
        $to = ($phoneNumber);
        $from = "pragmatics@gmail.com";
-       $message = "Greetings, \n\nPlease navigate to http://helios.ite.gmu.edu/~zlaflous/index.php/resetpass.php to confirm your personal email and phone number are correct. \n\nThank you, \nPragmatics Automated Password Reset System";
+       $message = "Greetings, \n\nPlease navigate to http://helios.ite.gmu.edu/~zlaflous/resetpass.php to confirm your personal email and phone number are correct. \n\nThank you, \nPragmatics Automated Password Reset System";
        $message = wordwrap($message, 70, "\r\n");
+       //Add tokens here likely for each user to update if necessary. 
        $headers = "From: $from\n";
        mail($to, $from, $message, $headers);
        //echo "sent";
@@ -61,6 +65,8 @@ function sendSMS90day($dbh){
 }
 
 //90 DAY NOTIFICATION
+//WE MAY NEED TO ADD A TOKEN THAT WOULD ALLOW USER TO UPDATE INFORMATION IF NECESSARY.
+//THIS IS SEPARATE FROM THE PASSWORD-RESET EMAILS/TEXT, WHICH IS MANDATORY.
 function sendEmail90Day($dbh){
     // Queries the Azure database and assembles the work emails into an array
     $emailsDouble = array();
@@ -82,7 +88,6 @@ function sendEmail90Day($dbh){
         $emails[] = $store;
     }
 
-    
     //Construct the email message to all employees
 	$message = "Greetings, \n\nPlease navigate to http://helios.ite.gmu.edu/~chong4/IT207/resetpass.php to confirm your personal email and phone number are correct. \n\nThank you, \nPragmatics Automated Password Reset System"; 
     $message = wordwrap($message, 70, "\r\n");
@@ -96,12 +101,29 @@ function sendEmail90Day($dbh){
 	}
 }
 
-//90 DAY NOTIFICATION
-function check90DayDate(){
+//NOTIFICATION DATE EMAIL
+function checkInfoVerifyDate(){
+    $day = date("z");
+    if ($day == 90 or $day == 250) {
+        return true;
+    }
+    return false;
+}
+
+//These functions are used to send mediums notifying password reset is coming. 
+function sendEmailPasswordExpireImpending(); 
+function sendSMSPasswordExpireImpending(); 
+
+//RESET PASSWORD NOTIFICATION
+function checkPasswordResetDate(){
     $day = date("z");
     if ($day == 150 or $day == 310) {
         return true;
     }
+    //Add way to check if user has already reset password ahead of existing password being expired. 
+
+
+    //Add the 20, 15, 10, 5, 4, 3, 2, 1-day expiration. 
     return false;
 }
 
@@ -111,14 +133,30 @@ function main() {
     $conn = $SQLconnections[0]; 
     $dbh = $SQLconnections[1];
 
-    //Check if the date of the year requires 90-day notification to be sent to text messages and emails.
-    if (check90DayDate()){
+    /* Check if the date of the year requires 90-day notification to be sent to text messages and emails
+    to verify employee data */
+    if (checkInfoVerifyDate()){
         sendSMS90day($dbh); 
         sendEmail90Day($dbh);
     }
+
+    /* if (checkPasswordResetDate()){
+        sendSMS90Day($dbh);
+        sendEmail190Day($dbh);
+    }
+
+    /* Function checking for password-reset mechanisms 
+
+    */
    
     mysqli_close($conn); 
+
+    /* Functions that are necessary for SMS and email notifications 
 }
+
+
+
+
 
 
 ///BETA IN PROGRESS
@@ -155,18 +193,45 @@ function sendSMSpasswordExpired($dbh){
        $headers = "From: $from\n";
 
        //Generate the token - http://thisinterestsme.com/generating-random-token-php/
-       //https://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php
+       //https://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php6
        $token = openssl_random_pseudo_bytes(16);
        $token = bin2hex($token); 
        //Puts the token in the database table passwordToken
        $dbh -> query('UPDATE passwordToken SET token = ' . $token . ' WHERE empid IN (SELECT empid FROM empinfo WHERE phone = ' . $phoneNumber . ')');
 
-       $message = "Greetings, \n\nPlease navigate to http://helios.ite.gmu.edu/~zlaflous/index.php/index.php?token=" . $token ." to confirm your personal email and phone number are correct. \n\nThank you, \nPragmatics Automated Password Reset System";
+       $message = "Greetings, \n\nPlease navigate to http://helios.ite.gmu.edu/~zlaflous/index.php?token=" . $token ." to reset your password. \n\nThank you, \nPragmatics Automated Password Reset System";
        $message = wordwrap($message, 70, "\r\n");
        
        mail($to, $from, $message, $headers);
-       //echo "sent";
+       //echo "sent"; 
+
        }
 }
 
+/
+
+//Used to generate the four digit code that will be sent for SMS or email.  
+function generatePIN(){
+    $pin = ""; 
+
+    $i = 0; 
+    while($i < 4){        
+        $pin .= mt_rand(0, 9);
+        $i++;
+    }
+
+    return $pin;
+}
+ 
+//$pin = generatePIN();
+
+//This is used for enter.php page. 
+function verifyingFourDigitCode($userEntered, $systemGeneratedCode){
+    if($userEntered == $systemGeneratedCode){
+        echo("Four digit code verified. Leading to resetpassexpired.php.");
+    }
+}
+
+
+//Add the codes that would allow data in the database to be updated. 
 ?>
