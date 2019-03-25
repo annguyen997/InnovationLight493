@@ -19,7 +19,6 @@
 
 
 <div id='pressbutton'>
-<form method="post" action="resetpassexpired.php">
 
 <h3> 
 Check your mobile device. Please enter the 4-digit code received into the box below. 
@@ -32,6 +31,7 @@ Check your mobile device. Please enter the 4-digit code received into the box be
 	<td><center>Third Digit </center></td>
 	<td><center>Fourth Digit </center></td>
 </tr>
+<form action="resetpassexpired.php" method="post">
 
 <tr>
 <td height="100" width = "20"> 
