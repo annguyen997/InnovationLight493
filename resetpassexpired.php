@@ -19,20 +19,27 @@
 
 
 <div id='pressbutton'>
-<form method="post" action="finished.php">
-
-<h3> 
-Code verified. Please reset your password. 
-</h3>
 
 </body>
-<h4>Enter previous password: </h4><input name="previous" type="password" style="width: 300px; font-size: 20px; font: Courier;"  /> <br />
-<h4>Enter new password: </h4><input type="password" style="width: 300px; font-size: 20px; font: Courier;" /> <br />
-<h4>Re-enter new password: </h4><input type="password" style="width: 300px; font-size: 20px; font: Courier;" /> <br /><br />
-<body>
-<input type="submit" value="CONFIRM RESET" class="button"/>
+<?php
+$enteredCode = $_POST['num1'].$_POST['num2'].$_POST['num3'].$_POST['num4'];
+echo $enteredCode; 
+$validCode = "1234";
 
-</form>
+if ($enteredCode == $validCode) {
+	echo "<h3> Code verified. Please reset your password. </h3>
+	<form action='finished.php' method='post'>
+	<h4>Enter previous password: </h4><input name='previous' type='password' style='width: 300px; font-size: 20px; font: Courier;'  /> <br />
+	<h4>Enter new password: </h4><input type='password' style='width: 300px; font-size: 20px; font: Courier;' /> <br />
+	<h4>Re-enter new password: </h4><input type='password' style='width: 300px; font-size: 20px; font: Courier;' /> <br /><br />
+	<body>
+	<input type='submit' value='CONFIRM RESET' class='button'/>
+	</form>";
+	}
+	else {
+		echo "<h6> Error! The code you entered does not match the one sent to your mobile device. <br/><br/>Please try again. </h6>";
+		}
+?>
 
 </div>
 <div id='sidebar'>
