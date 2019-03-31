@@ -1,0 +1,46 @@
+index.php 
+  - Generates pin for verification and sends to POST
+  >>> Goes to entercode.php
+
+entercode.php
+  - Page sends SMS with generated pin gotten from POST
+  - User selects 4 digits to match the pin
+  - Submits the user-entered code to POST
+  >>> Goes to resetPassExpired.php
+
+resetPassExpired.php
+  - Compares entered code to the generated one from POST
+  - If the codes match, allows user to enter their old pass, new pass,
+    and re-enter their new pass
+  - If they do not match, gives an error
+  - Submits the 3 passwords to POST
+  >>> Goes to finished.php
+
+resetPass.php
+  - Same function as resetPassExpired.php but does not need SMS code verification
+
+finished.php
+  - Validates new password for matching the re-entered one, length, presence
+    of a digit, and if it is in the top 50 most common passwords
+  - If valid, the new password is hashed and the database is updated where 
+    the old password was (compares hash of old password to the entered old pass,
+    then replaces the password with the hash of the new one)
+  - If invalid, errors are shown based on error type
+
+expirationAlert.php
+  - Sends an alert via email 14, 7, 3, 2, 1, and day of expiration based on day 
+    number of year (date("z") function)
+  - Task scheduler will open page once a day so multiple emails are not sent every 
+    day 
+
+Notification.php
+  - Sends SMS and email messages 30 days before expiration prompting users to 
+    updates their information in the database 
+  - Task scheduler will open page once a day so multiple emails and texts are 
+    not sent every day
+
+smsAlert.php
+  - ? Im not sure if we need this any more. 
+
+pragmatics.css
+  - Controls look and feel of pages
