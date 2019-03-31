@@ -32,6 +32,10 @@ Check your mobile device. Please enter the 4-digit code received into the box be
 	<td><center>Fourth Digit </center></td>
 </tr>
 <form action="resetpassexpired.php" method="post">
+<?php 
+$pin = $_POST['pin'];
+echo "TEST PURPOSES<br/>".$pin;
+?>
 
 <tr>
 <td height="100" width = "20"> 
@@ -99,6 +103,10 @@ Check your mobile device. Please enter the 4-digit code received into the box be
 </table>
 <body>
 <br /><br />
+<!-- 
+Hidden input type sends the generated code to the next page to compare to the one that the user will input. 
+-->
+<input type="hidden" name="pin" value=<?php echo $pin ?>>
 <center><input type="submit" value="SUBMIT CODE" class="button"/></center>
 
 </form>
