@@ -31,7 +31,26 @@ Instructions: Due to your password expiring, we will require additional measures
  <br />
 
 <center><input type="submit" value="SEND A CODE" class="button"/></center>
-
+<!-- 
+Function below generates a random pin to use in verifying the user.
+-->
+<?php
+function generatePIN(){
+    $pin = ""; 
+    $i = 0; 
+    while($i < 4){        
+        $pin .= mt_rand(0, 9);
+        $i++;
+    }
+    return $pin;
+}
+$pin = generatePIN();
+echo "TEST PURPOSES<br/>".$pin;
+?>
+<!-- 
+Hidden input type sends the generated code to the next page to compare to the one that the user will input. 
+-->
+<input type="hidden" name="pin" value=<?php echo $pin ?>>
 </form>
 
 </div>
