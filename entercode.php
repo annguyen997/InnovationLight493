@@ -69,9 +69,9 @@ $phone = array();
 	//foreach($userPhone as $phoneNumber) { Not using database here.
 		//$to = ($phoneNumber);  Hardcoded phone number for testing purposes.
 	    $from = "pragmatics@gmail.com";
-	    $message = "Your four digit verifciation code: $pin";
+	    $message = "Your four digit verifciation code is: $pin";
 	    $headers = "From: $from\n";
-		mail("5714888325@txt.att.net", $from, $message, $headers); //using my phone number with the AT&T carrier, if you want to test you have to find your carriers domain
+		mail("5714888325@txt.att.net", $from, $message); //using my phone number with the AT&T carrier, if you want to test you have to find your carriers domain
 		//echo "sent";
 //}
 ?>
