@@ -21,6 +21,12 @@
 <form method="post" action="resetpass.php">
 
 <?php
+//=====================================
+//	|\      /|\   / /---- ___   |
+//	| \    / | \ / |     /   \  |
+//	|  \  /  |  |	\---||	 |  | 
+//	|   \/   |  | 	____/\___/\ |____
+//=====================================
 $host = 'dbinnovationlight.mysql.database.azure.com';
 $username = 'InnovationLight@dbinnovationlight';
 $password = '1nnovationLight';
