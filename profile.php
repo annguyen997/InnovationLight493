@@ -16,26 +16,45 @@
 //Select DB
 $db = mysqli_select_db($conn, "testdata");
 $dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
-//Catch Post Data and Process
-if(isset($_POST['workEmail'])){
-    $personEmail = $_POST['personalEmail'];
-    $personPhone = $_POST['phone'];
+//define variables
+     $personEmail = $personPhone = $foneCarrier = "";
+	 $emailErr = $phoneErr = $carrierErr = "";
+    
     //Check if content is present
-    if(!empty($personEmail)  && !empty($personPhone)){
-        //Update DB
-        $q = mysqli_query($conn, "UPDATE empinfo SET personalEmail='$personEmail', phone='$personPhone'");
-        //Create Debug Message
-        if(!$q){
-            die("Failed to update database check query string or input values ".mysqli_error());
-        }
-        //If query is good, head back to desired page.
-        header("Location: indexLog.php");
-        exit;
-    }else{
-        //Create Empty Error Message
-        $error = "Error! No Changes Made";
-    }
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+	{
+	$personEmail = test_input($_POST['personalEmail']);
+    $personPhone = test_input($_POST['phone']);
+	$foneCarrier = test_input($_POST['selectCarrier']);
+	}
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
+if (empty($_POST['personalEmail'])) {
+    $emailErr = "Email is required";
+  } else {
+    $personEmail = test_input($_POST['personalEmail']);
+    // check if e-mail address is well-formed
+    if (!filter_var($personEmail, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+    }
+  }
+  if (empty($_POST['phone'])) {
+    $phoneErr = "Phone number is required";
+  } else {
+    $personPhone = test_input($_POST['phone']);
+    // check if e-mail address is well-formed
+    if(!preg_match('/^[\+0-9\-\(\)\s]*$/', $personPhone)) {
+      $phoneErr = "Invalid phone number format";
+    }
+  }
+  //https://kb.sandisk.com/app/answers/detail/a_id/17056/~/list-of-mobile-carrier-gateway-addresses phone carrier website
+  if (isset($_POST['selectCarrier']) && $_POST['selectCarrier'] == '' ) {
+   $carrierErr = "Phone Carrier is required";
+  } 
 mysqli_close($conn); // Closing Connection
 ?>
 
@@ -69,7 +88,8 @@ while($rowValue = mysqli_fetch_array($result))
       $pnumber = $rowValue['phone'];
 }
 mysqli_close($conn);
-?>
+?>*/
+
 
 <!DOCTYPE html>
 <html>
@@ -83,17 +103,48 @@ mysqli_close($conn);
 <b id="welcome">Welcome : <i><?php echo $login_session; ?></i></b>
 <b id="logout"><a href="LogoutLog.php">Log Out</a></b>
 <div id="Update">
-<form action="" method="post">
-     <label>Personal Email :</label>
-     <input id = "personal Email" name="personalEmail" type="text" value='<?php echo $pemail;?>'/>
-     <label>phone</label>
-     <input id ="phone" name="phone" type="text" value='<?php echo $pnumber;?>'/>
+<p><span class="error">* required field</span></p>
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+     
+     Personal Email<input id = "personal Email" name="personalEmail" type="text" placeholder ="***@example.com" />
+	 <span class="error">* <?php echo $emailErr;?></span>
+	 <p>
+	 <br><br>
+     Phone Number<input id ="phone" name="phone" type="text" placeholder ="571 274 9876"/>
+	 <span class="error">* <?php echo $phoneErr;?></span>
+	 <p>
+	 Phone Carrier?
+    <select name="selectCarrier" * <?php echo $carrierErr;?> > 
+       <option value="">Please Select</option>
+       <option value="verizon">verizon</option>
+       <option value="Sprint">Sprint</option>
+       <option value="Tmobile">Tmobile</option>
+       <option value="AT&T">AT&T</option>
+       <option value="Cricket">Cricket</option>
+       <option value="MetroPCS">MetroPCS</option>
+       <option value="Simple Mobile">Simple Mobile</option>
+       <option value="Straight Talk">Straight Talk</option>
+       <option value="US Cellular">US Cellular</option>
+   </select>
+    </p>
+	 <br><br>
      <input name="update" type="submit" value=" Update ">
 	 
      <span><?php if(isset($error) != NULL):?>
         <p><?php echo $error; ?></p>
       <?php endif; ?></span>
 </form>
+
+<?php
+echo "<h2>Your Input:</h2>";
+echo $personEmail;
+echo "<br>";
+echo $personPhone;
+echo "<br>";
+echo $foneCarrier;
+echo "<br>";
+
+?>
 </div>
 </div>
 </body>
