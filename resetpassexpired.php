@@ -23,15 +23,16 @@
 </body>
 <?php
 $enteredCode = $_POST['num1'].$_POST['num2'].$_POST['num3'].$_POST['num4'];
-echo $enteredCode; 
-$validCode = "1234";
+echo "TEST PURPOSES<br/>You entered: ".$enteredCode."<br/>"; 
+$validCode = $_POST['pin'];
+echo "Generated code: ".$validCode;
 
 if ($enteredCode == $validCode) {
 	echo "<h3> Code verified. Please reset your password. </h3>
 	<form action='finished.php' method='post'>
-	<h4>Enter previous password: </h4><input name='previous' type='password' style='width: 300px; font-size: 20px; font: Courier;'  /> <br />
-	<h4>Enter new password: </h4><input type='password' style='width: 300px; font-size: 20px; font: Courier;' /> <br />
-	<h4>Re-enter new password: </h4><input type='password' style='width: 300px; font-size: 20px; font: Courier;' /> <br /><br />
+	<h4>Enter previous/expired password: </h4><input type='password' name='oldPass' style='width: 300px; font-size: 20px; font: Courier;' /> <br />
+	<h4>Enter new password: </h4><input type='password' name='newPass' style='width: 300px; font-size: 20px; font: Courier;' /> <br />
+	<h4>Re-enter new password: </h4><input type='password' name='reEnter' style='width: 300px; font-size: 20px; font: Courier;' /> <br /><br />
 	<body>
 	<input type='submit' value='CONFIRM RESET' class='button'/>
 	</form>";
