@@ -1,4 +1,9 @@
-index.php 
+index.php
+  - User logs in
+  - sends user inputted work email to POST
+  >>> Goes to profile.php
+
+homepage.php 
   - Generates pin for verification and sends to POST
   >>> Goes to entercode.php
 
