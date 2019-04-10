@@ -1,18 +1,7 @@
 
 <?php
     include ('sessionLog.php');
-    $host = 'dbinnovationlight.mysql.database.azure.com';
-    $username = 'InnovationLight@dbinnovationlight';
-    $password1 = '1nnovationLight';
-    $db_name = 'testdata';
-
-//Establishes the connection//
-	$conn = mysqli_init();
-	mysqli_real_connect($conn, $host, $username, $password1, $db_name, 3306);
-	if (mysqli_connect_errno($conn)) {
-	die('Failed to connect to MySQL: '.mysqli_connect_error());
-	}
-	echo "connected successufly!\n";
+    include ('configure.php');
 //Select DB
    $db = mysqli_select_db($conn, "testdata");
    $dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
@@ -35,9 +24,9 @@
        return $data;
     }
 	if (empty($_POST['personalEmail']) && empty($_POST['phone']) && empty($_POST['personalEmail'])) {
-		echo "Invalid phone number";
-		echo "Invalid phone Carrier";
-		echo "Invalid Email";
+		echo $phoneErr = "phone number is required";
+		echo $carrierErr = "phone Carrier is required";
+		echo $emailErr = "Email is required";
 	}
 	else {
     if (empty($_POST['personalEmail'])) {

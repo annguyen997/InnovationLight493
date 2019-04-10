@@ -1,17 +1,5 @@
 <?php
-    $host = 'dbinnovationlight.mysql.database.azure.com';
-    $username = 'InnovationLight@dbinnovationlight';
-    $password1 = '1nnovationLight';
-    $db_name = 'testdata';
-
-//Establishes the connection//
-	$conn = mysqli_init();
-	mysqli_real_connect($conn, $host, $username, $password1, $db_name, 3306);
-	if (mysqli_connect_errno($conn)) {
-	die('Failed to connect to MySQL: '.mysqli_connect_error());
-	}
-	echo "connected successufly!\n";
-
+    include('configure.php');
     session_start(); // Starting Session
 	$error=''; // Variable To Store Error Message
 	if (isset($_POST['submit'])) {
@@ -27,7 +15,7 @@
    
    $workEmailInput = mysqli_real_escape_string($conn, $_POST['workEmail']);
    $passwordInput = hash('sha256', $_POST['password']);
-   print($passwordInput);
+   //print($passwordInput);
    //$passwordInput = mysqli_real_escape_string($conn, $_POST['password']);
    //$hashedPassword = hash("sha256", $passwordInput);
    //print ($workEmailInput);
