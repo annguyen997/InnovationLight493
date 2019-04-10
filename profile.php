@@ -14,81 +14,76 @@
 	}
 	echo "connected successufly!\n";
 //Select DB
-$db = mysqli_select_db($conn, "testdata");
-$dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
+   $db = mysqli_select_db($conn, "testdata");
+   $dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
 //define variables
      $personEmail = $personPhone = $foneCarrier = "";
 	 $emailErr = $phoneErr = $carrierErr = "";
     
     //Check if content is present
-if ($_SERVER["REQUEST_METHOD"] == "POST")
+    if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 	$personEmail = test_input($_POST['personalEmail']);
     $personPhone = test_input($_POST['phone']);
 	$foneCarrier = test_input($_POST['selectCarrier']);
+	}//end if
+	//check user input
+    function test_input($data) {
+       $data = trim($data);
+       $data = stripslashes($data);
+       $data = htmlspecialchars($data);
+       return $data;
+    }
+	if (empty($_POST['personalEmail']) && empty($_POST['phone']) && empty($_POST['personalEmail'])) {
+		echo "Invalid phone number";
+		echo "Invalid phone Carrier";
+		echo "Invalid Email";
 	}
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-if (empty($_POST['personalEmail'])) {
-    $emailErr = "Email is required";
-  } else {
-    $personEmail = test_input($_POST['personalEmail']);
+	else {
+    if (empty($_POST['personalEmail'])) {
+       $emailErr = "Email is required";
+    } //end if
+    else
+	{
+       $personEmail = test_input($_POST['personalEmail']);
     // check if e-mail address is well-formed
     if (!filter_var($personEmail, FILTER_VALIDATE_EMAIL)) {
-      $emailErr = "Invalid email format";
+       $emailErr = "Invalid email format";
+    }//end if
     }
-  }
-  if (empty($_POST['phone'])) {
-    $phoneErr = "Phone number is required";
-  } else {
-    $personPhone = test_input($_POST['phone']);
-    // check if e-mail address is well-formed
-    if(!preg_match('/^[\+0-9\-\(\)\s]*$/', $personPhone)) {
-      $phoneErr = "Invalid phone number format";
+    if (empty($_POST['phone'])) {
+       $phoneErr = "Phone number is required";
+    } //end if
+	else 
+	{
+         $personPhone = test_input($_POST['phone']);
+    // check if phone number is well-formed
+    if(!preg_match('/^[\+0-9\-\(\)\s]*$/', $personPhone))
+		{
+         $phoneErr = "Invalid phone number format";
     }
-  }
-  //https://kb.sandisk.com/app/answers/detail/a_id/17056/~/list-of-mobile-carrier-gateway-addresses phone carrier website
-  if (isset($_POST['selectCarrier']) && $_POST['selectCarrier'] == '' ) {
-   $carrierErr = "Phone Carrier is required";
-  } 
+    }
+    if (isset($_POST['selectCarrier']) && $_POST['selectCarrier'] == '' )
+	{
+         $carrierErr = "Phone Carrier is required";
+    } 
+    $check = $_SESSION['login_user'];
+    if($db === false){
+    die("ERROR: Could not connect. " . mysqli_connect_error());
+    }
+    // Attempt update query execution
+    $sql = "UPDATE empinfo SET personalEmail = '$personEmail', phone = '$personPhone$foneCarrier' WHERE workEmail = '$check'";
+    if(mysqli_query($conn, $sql)){
+         echo "Records were updated successfully.";
+    } 
+    else
+    {
+         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+	}
 mysqli_close($conn); // Closing Connection
 ?>
 
-
-<?php
-$host = 'dbinnovationlight.mysql.database.azure.com';
-    $username = 'InnovationLight@dbinnovationlight';
-    $password1 = '1nnovationLight';
-    $db_name = 'testdata';
-
-//Establishes the connection//
-	$conn = mysqli_init();
-	mysqli_real_connect($conn, $host, $username, $password1, $db_name, 3306);
-	if (mysqli_connect_errno($conn)) {
-	die('Failed to connect to MySQL: '.mysqli_connect_error());
-	}
-	echo "connected successufly!\n";
-//Select DB
-$db = mysqli_select_db($conn, "testdata");
-$dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
-
-$check=$_SESSION['login_user'];
-// SQL Query To Fetch Complete Information Of User
-$ses_sql=mysqli_query($conn, "select personalEmail, phone from empinfo where workEmail='$check'");
- 
-$sql = "SELECT * FROM empinfo WHERE workEmail='$check'";
-$result = mysqli_query($conn, $sql);
-while($rowValue = mysqli_fetch_array($result))
-{
-	  $pemail = $rowValue['personalEmail'];
-      $pnumber = $rowValue['phone'];
-}
-mysqli_close($conn);
-?>*/
 
 
 <!DOCTYPE html>
@@ -110,21 +105,20 @@ mysqli_close($conn);
 	 <span class="error">* <?php echo $emailErr;?></span>
 	 <p>
 	 <br><br>
-     Phone Number<input id ="phone" name="phone" type="text" placeholder ="571 274 9876"/>
+     Phone Number<input id ="phone" name="phone" type="text" placeholder ="5712749876"/>
 	 <span class="error">* <?php echo $phoneErr;?></span>
 	 <p>
 	 Phone Carrier?
     <select name="selectCarrier" * <?php echo $carrierErr;?> > 
        <option value="">Please Select</option>
-       <option value="verizon">verizon</option>
-       <option value="Sprint">Sprint</option>
-       <option value="Tmobile">Tmobile</option>
-       <option value="AT&T">AT&T</option>
-       <option value="Cricket">Cricket</option>
-       <option value="MetroPCS">MetroPCS</option>
-       <option value="Simple Mobile">Simple Mobile</option>
-       <option value="Straight Talk">Straight Talk</option>
-       <option value="US Cellular">US Cellular</option>
+       <option value="@vtext.com">verizon</option>
+       <option value="@pm.sprint.com">Sprint</option>
+       <option value="@tmomail.net">Tmobile</option>
+       <option value="@mms.att.net">AT&T </option>
+       <option value="@mms.mycricket.com">Cricket</option>
+       <option value="@mymetropcs.com">MetroPCS</option>
+       <option value="@smtext.com">Simple Mobile</option>
+       <option value="@mms.uscc.net">US Cellular</option>
    </select>
     </p>
 	 <br><br>
@@ -136,9 +130,11 @@ mysqli_close($conn);
 </form>
 
 <?php
-echo "<h2>Your Input:</h2>";
+echo "<h2>Here is your new records:</h2>";
+echo "New Personal Email\n";
 echo $personEmail;
 echo "<br>";
+echo "New Phone Number\n";
 echo $personPhone;
 echo "<br>";
 echo $foneCarrier;
