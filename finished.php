@@ -89,10 +89,10 @@ if ($valid == "Y") {
 
 	$conn->close();
 		echo "<h3> Password has been reset. Please exit this window in your browser. </h3>";
-		}
-		else {
-			echo $errorMessage;
-			}
+}
+	else {
+		echo $errorMessage;
+	}
 ?>
 
 
