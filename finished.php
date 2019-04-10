@@ -23,9 +23,9 @@
 <?php
 $oldPass = $_POST['oldPass'];
 $newPass = $_POST['newPass'];
-echo "TEST PURPOSES<br/>New Password: ".$newPass."<br/>"; 
+//echo "TEST PURPOSES<br/>New Password: ".$newPass."<br/>"; 
 $reEnter = $_POST['reEnter'];
-echo "Re Entered: ".$reEnter."<br/><br/>";
+//echo "Re Entered: ".$reEnter."<br/><br/>"; //TESTING PURPOSES
 
 // valid is the variable that is changed to N if any of the password conditions are not met. This is checked after everything and determines if the password will be reset or an error will be given. 
 $valid = "Y";
@@ -58,9 +58,9 @@ if (!preg_match('~[0-9]+~', $newPass)) {
 // If the password is validated, it updates the database with the new one. 	
 if ($valid == "Y") {
 	$hashedPass = hash("sha256", $newPass); 
-	echo $hashedPass."<br/>"; 
+	//echo $hashedPass."<br/>"; //TESTING PURPOSES
 	$hashedPassOld = hash("sha256", $oldPass);
-	echo $hashedPassOld;
+	//echo $hashedPassOld; //TESTING PURPOSES
 	
 	$host = 'dbinnovationlight.mysql.database.azure.com';
 	$username = 'InnovationLight@dbinnovationlight';
@@ -72,7 +72,7 @@ if ($valid == "Y") {
 	mysqli_real_connect($conn, $host, $username, $password, $db_name, 3306);
 	if (mysqli_connect_errno($conn)) {
 		die('Failed to connect to MySQL: '.mysqli_connect_error());
-		}
+	}
 	
 	$dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password); 
 	
@@ -84,31 +84,23 @@ if ($valid == "Y") {
 	
 	$sql = 'UPDATE empinfo SET password = '.'"'.$hashedPass.'"'.' WHERE password = '.'"'.$hashedPassOld.'"'.';';
 	echo $sql;
-	
-	$dbh->query($sql);
 
+	$dbh->query($sql);
 	$conn->close();
 		echo "<h3> Password has been reset. Please exit this window in your browser. </h3>";
+} else {
+	echo $errorMessage;
 }
-	else {
-		echo $errorMessage;
-	}
 ?>
-
 
 <h3> 
 <br /> <br /> <br /> 
 </h3>
 
-</body>
-<body>
-
-
 </div>
 <div id='sidebar'>
 <br /><a href="http://www.pragmatics.com/">Pragmatics Home</a> <br /><br /><a href="http://helios.vse.gmu.edu/~chong4/IT207/">Password Reset Home</a> <br /><br />  Help/FAQ <br /><br /> <img src="logo.jpg" alt="logo"> <br /> <img src="IL.jpg" alt="Innovation Light">
 </div>
-
 
 </body>
 </html>
