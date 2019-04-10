@@ -87,7 +87,7 @@ if ($valid == "Y") {
 
 	$dbh->query($sql);
 	$conn->close();
-		echo "<h3> Password has been reset. Please exit this window in your browser. </h3>";
+		echo "<h3> Password has been reset successfully. Please exit this window in your browser for security purposes. </h3>";
 } else {
 	echo $errorMessage;
 }
