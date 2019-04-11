@@ -2,21 +2,25 @@
 <?php
     include ('sessionLog.php');
     include ('configure.php');
-//Select DB
-   $db = mysqli_select_db($conn, "testdata");
-   $dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
-//define variables
-     $personEmail = $personPhone = $foneCarrier = "";
-	 $emailErr = $phoneErr = $carrierErr = "";
+
+    //Select DB
+    $db = mysqli_select_db($conn, "testdata");
+
+    $dbh = new PDO("mysql:host=$host;dbname=$db_name", $username, $password1);
+    
+    //define variables
+    $personEmail = $personPhone = $phoneCarrier = "";
+    $emailErr = $phoneErr = $carrierErr = "";
     
     //Check if content is present
     if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
-	$personEmail = test_input($_POST['personalEmail']);
-    $personPhone = test_input($_POST['phone']);
-	$foneCarrier = test_input($_POST['selectCarrier']);
+        $personEmail = test_input($_POST['personalEmail']);
+        $personPhone = test_input($_POST['phone']);
+        $phoneCarrier = test_input($_POST['selectCarrier']);
 	}//end if
-	//check user input
+    //check user input
+    
     function test_input($data) {
        $data = trim($data);
        $data = stripslashes($data);
@@ -24,9 +28,9 @@
        return $data;
     }
 	if (empty($_POST['personalEmail']) && empty($_POST['phone']) && empty($_POST['personalEmail'])) {
-		echo $phoneErr = "phone number is required";
-		echo $carrierErr = "phone Carrier is required";
-		echo $emailErr = "Email is required";
+		echo "Invalid Phone Number";
+		echo "Invalid Phone Carrier";
+		echo "Invalid Email";
 	}
 	else {
     if (empty($_POST['personalEmail'])) {
@@ -61,7 +65,7 @@
     die("ERROR: Could not connect. " . mysqli_connect_error());
     }
     // Attempt update query execution
-    $sql = "UPDATE empinfo SET personalEmail = '$personEmail', phone = '$personPhone$foneCarrier' WHERE workEmail = '$check'";
+    $sql = "UPDATE empinfo SET personalEmail = '$personEmail', phone = '$personPhone$foneCarrier' WHERE workEmail = '$check'"; //Can we also use empid? 
     if(mysqli_query($conn, $sql)){
          echo "Records were updated successfully.";
     } 
@@ -99,10 +103,10 @@ mysqli_close($conn); // Closing Connection
 	 <p>
 	 Phone Carrier?
     <select name="selectCarrier" * <?php echo $carrierErr;?> > 
-       <option value="">Please Select</option>
-       <option value="@vtext.com">verizon</option>
+       <option value="">Please Select Your Mobile Carrier: </option>
+       <option value="@vtext.com">Verizon</option>
        <option value="@pm.sprint.com">Sprint</option>
-       <option value="@tmomail.net">Tmobile</option>
+       <option value="@tmomail.net">T-Mobile</option>
        <option value="@mms.att.net">AT&T </option>
        <option value="@mms.mycricket.com">Cricket</option>
        <option value="@mymetropcs.com">MetroPCS</option>
@@ -126,9 +130,8 @@ echo "<br>";
 echo "New Phone Number\n";
 echo $personPhone;
 echo "<br>";
-echo $foneCarrier;
+echo $phoneCarrier;
 echo "<br>";
-
 ?>
 </div>
 </div>
